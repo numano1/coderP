@@ -49,7 +49,8 @@ class HB_Decimator(config: HbConfig) extends Module {
             if (i == 0) {
                 registerchain1(i + 1) := tapped1(i)
             } else {
-                registerchain1(i + 1) := DspComplex.wire(registerchain1(i).real + tapped1(i).real, registerchain1(i).imag + tapped1(i).imag)
+                registerchain1(i + 1).real := registerchain1(i).real + tapped1(i).real
+                registerchain1(i + 1).imag := registerchain1(i).imag + tapped1(i).imag
             }
         }
 
@@ -66,7 +67,8 @@ class HB_Decimator(config: HbConfig) extends Module {
             if (i == 0) {
                 registerchain2(i + 1) := tapped2(i)
             } else {
-                registerchain2(i + 1) := DspComplex.wire(registerchain2(i).real + tapped2(i).real, registerchain2(i).imag + tapped2(i).imag)
+                registerchain2(i + 1).real := registerchain2(i).real + tapped2(i).real
+                registerchain2(i + 1).imag := registerchain2(i).imag + tapped2(i).imag
             }
         }
 
