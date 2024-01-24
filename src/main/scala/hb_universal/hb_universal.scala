@@ -1,5 +1,5 @@
 // Finitie impulse filter
-package hb_decimator
+package hb_universal
 import config._
 import config.{HbConfig}
 
@@ -13,28 +13,63 @@ import chisel3.stage.ChiselGeneratorAnnotation
 import dsptools._
 import dsptools.numbers.DspComplex
 
-class HB_DecimatorIO(resolution: Int, gainBits: Int) extends Bundle {
+class hb_universalIO(resolution: Int, gainBits: Int) extends Bundle {
   val in = new Bundle {
-    val clock_low = Input(Clock())
+    //val clock_low = Input(Clock())
     val scale  = Input(UInt(gainBits.W))
     val iptr_A = Input(DspComplex(SInt(resolution.W), SInt(resolution.W)))
+    val convmode = Input(UInt(1.W))
+    val output_switch = Input(UInt(1.W))
+    val enable_clk_div= Input(UInt(1.W))
   }
   val out = new Bundle {
     val Z = Output(DspComplex(SInt(resolution.W), SInt(resolution.W)))
   }
 }
 
-class HB_Decimator(config: HbConfig) extends Module {
-    val io = IO(new HB_DecimatorIO(resolution=config.resolution, gainBits=config.gainBits))
+class hb_universal(config: HbConfig) extends Module {
+    val io = IO(new hb_universalIO(resolution=config.resolution, gainBits=config.gainBits))
     val data_reso = config.resolution
     val calc_reso = config.resolution * 2
 
-    val inregs = RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
+    // Inner clk div
+
+    val en_reg =  withClockAndReset((!(clock.asUInt)).asClock,reset){RegInit(0.U(1.W))} 
+    en_reg := io.in.enable_clk_div
+    val fb_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
+    val clk_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
+    withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){ 
+      fb_reg := !fb_reg
+      clk_reg := !fb_reg
+    }
+   
+    //The half clock rate domain
+    val coeff1_len=(config.H.indices.filter(_ % 2 == 0).map(config.H(_))).size
+    val coeff2_len=(config.H.indices.filter(_ % 2 == 1).map(config.H(_))).size
+    val registerchain2 = withClock (clk_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain1 = withClock(clk_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val subfil2 = registerchain2(coeff2_len)
+    val subfil1 = registerchain1(coeff1_len)
+
+
+    val clk_mux_input = Mux(io.in.convmode.asBool,clock,clk_reg.asBool.asClock)
+    val clk_mux_output = Mux(io.in.convmode.asBool,clk_reg.asBool.asClock,clock)
+
+
+    val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
     
     inregs.foldLeft(io.in.iptr_A) {(prev, next) => next := prev; next} //The last "next" is the return value that becomes the prev
 
-    //The half clock rate domain
-    withClock (io.in.clock_low){
+    val outreg = RegInit(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))
+
+    outreg.real := ((subfil1.real + subfil2.real) * io.in.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+    outreg.imag := ((subfil1.imag + subfil2.imag) * io.in.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+
+    io.out.Z := outreg
+
+
+
+    withClock (clk_reg.asBool.asClock){
         val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
         (slowregs, inregs).zipped.map(_ := _)
 
@@ -43,7 +78,7 @@ class HB_Decimator(config: HbConfig) extends Module {
         println(sub1coeffs)
 
         val tapped1 = sub1coeffs.reverse.map(tap => slowregs(0) * tap)
-        val registerchain1 = RegInit(VecInit(Seq.fill(tapped1.length + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))
+        //val registerchain1 = RegInit(VecInit(Seq.fill(tapped1.length + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))
 
         for ( i <- 0 until tapped1.length) {
             if (i == 0) {
@@ -54,14 +89,14 @@ class HB_Decimator(config: HbConfig) extends Module {
             }
         }
 
-        val subfil1 = registerchain1(tapped1.length)
+        //val subfil1 = registerchain1(tapped1.length)
         
         val sub2coeffs=config.H.indices.filter(_ % 2 == 1).map(config.H(_)) //Odd coeffs for Fir 2
         println("HB odd coeffs")
         println(sub2coeffs)
 
         val tapped2 = sub2coeffs.reverse.map(tap => slowregs(1) * tap)
-        val registerchain2 = RegInit(VecInit(Seq.fill(tapped2.length + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))
+        //val registerchain2 = RegInit(VecInit(Seq.fill(tapped2.length + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))
 
         for ( i <- 0 until tapped2.length) {
             if (i == 0) {
@@ -72,21 +107,25 @@ class HB_Decimator(config: HbConfig) extends Module {
             }
         }
 
-        val subfil2 = registerchain2(tapped2.length)
-        
-        val outreg = RegInit(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))
+        //val subfil2 = registerchain2(tapped2.length)
 
-        outreg.real := ((subfil1.real + subfil2.real) * io.in.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-        outreg.imag := ((subfil1.imag + subfil2.imag) * io.in.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-
-        io.out.Z := outreg
     }
+
+
+        
+        //val outreg = RegInit(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))
+
+        //outreg.real := ((subfil1.real + subfil2.real) * io.in.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+        //outreg.imag := ((subfil1.imag + subfil2.imag) * io.in.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+
+        //io.out.Z := outreg
+    
 }
 
 
 
 /** Generates verilog or sv*/
-object HB_Decimator extends App with OptionParser {
+object hb_universal extends App with OptionParser {
   // Parse command-line arguments
   val (options, arguments) = getopts(default_opts, args.toList)
   printopts(options, arguments)
@@ -105,10 +144,10 @@ object HB_Decimator extends App with OptionParser {
   }
 
   // Generate verilog
-  val annos = Seq(ChiselGeneratorAnnotation(() => new HB_Decimator(config=hb_config.get)))
+  val annos = Seq(ChiselGeneratorAnnotation(() => new hb_universal(config=hb_config.get)))
   //(new ChiselStage).execute(arguments.toArray, annos)
   val sysverilog = (new ChiselStage).emitSystemVerilog(
-    new HB_Decimator(config=hb_config.get),
+    new hb_universal(config=hb_config.get),
      
     //args
     Array("--target-dir", target_dir))
