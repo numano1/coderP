@@ -37,10 +37,10 @@ class hb_universal(config: HbConfig) extends Module {
     val en_reg =  withClockAndReset((!(clock.asUInt)).asClock,reset){RegInit(0.U(1.W))} 
     en_reg := io.in.enable_clk_div
     val fb_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
-    val clk_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
+    val clk_div_2_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
     withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){ 
       fb_reg := !fb_reg
-      clk_reg := !fb_reg
+      clk_div_2_reg := !fb_reg
     }
    
     //The half clock rate domain
@@ -50,14 +50,14 @@ class hb_universal(config: HbConfig) extends Module {
     println(coeff1_len)
     println("LEn even coeffs")
     println(coeff2_len)
-    val registerchain2 = withClock (clk_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
-    val registerchain1 = withClock(clk_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain2 = withClock (clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain1 = withClock(clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
     val subfil2 = registerchain2(coeff2_len)
     val subfil1 = registerchain1(coeff1_len)
 
 
-    val clk_mux_input = Mux(io.in.convmode.asBool,clock.asUInt.asBool,clk_reg.asBool).asClock
-    val clk_mux_output = Mux(io.in.convmode.asBool,clk_reg.asBool,clock.asUInt.asBool).asClock
+    val clk_mux_input = Mux(io.in.convmode.asBool,clock.asUInt.asBool,clk_div_2_reg.asBool).asClock
+    val clk_mux_output = Mux(io.in.convmode.asBool,clk_div_2_reg.asBool,clock.asUInt.asBool).asClock
 
 
     val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
@@ -68,7 +68,7 @@ class hb_universal(config: HbConfig) extends Module {
     
     //inregs.foldLeft(io.in.iptr_A) {(prev, next) => next := prev; next} //The last "next" is the return value that becomes the prev
     val clk_out_reg = Wire(Bool())
-    clk_out_reg := RegNext(clk_reg.asUInt)
+    clk_out_reg := RegNext(clk_div_2_reg.asUInt)
     val outreg =withClock(clk_mux_output){ RegInit(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))}
     withClock(clk_mux_output){ 
         when(io.in.convmode.asBool){
@@ -92,7 +92,7 @@ class hb_universal(config: HbConfig) extends Module {
 
 
 
-    withClock (clk_reg.asBool.asClock){
+    withClock (clk_div_2_reg.asBool.asClock){
         val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
         //(slowregs, inregs).zipped.map(_ := _)
         when(io.in.convmode.asBool){
