@@ -10,38 +10,38 @@ import chisel3._
 
 /** HB parameter case class
   */
-case class HbGeneric(
+case class hbGeneric(
   syntax_version:     Option[Int], // None for scala instantiation
   resolution:	      Int,
   gainBits:           Int
 )
 
-case class HbTaps(
+case class hbTaps(
   H:                  Seq[Double]
 )
 
-case class HbConfig(
+case class hbConfig(
   syntax_version:     Option[Int], // None for scala instantiation
   resolution:         Int,
   H:		      Seq[Int],
   gainBits:           Int
 )
 
-object HbConfig {
-  implicit val hbConfigFormat = yamlFormat3(HbGeneric)
+object hbConfig {
+  implicit val hbConfigFormat = yamlFormat3(hbGeneric)
 
-  implicit val dHFormat = yamlFormat1(HbTaps)
+  implicit val dHFormat = yamlFormat1(hbTaps)
 
   // TODO: Update this to always match the major version number of the release
   val syntaxVersion = 2
 
   /** Exception type for FIR config parsing errors */
-  class HbConfigParseException(msg: String) extends Exception(msg)
+  class hbConfigParseException(msg: String) extends Exception(msg)
 
   /** Type for representing error return values from a function */
   case class Error(msg: String) {
     /** Throw a parsing exception with a debug message. */
-    def except() = { throw new HbConfigParseException(msg) }
+    def except() = { throw new hbConfigParseException(msg) }
 
     /** Abort program execution and print out the reason */
     def panic() = {
@@ -68,7 +68,7 @@ object HbConfig {
     Left(version)
   }
 
-  def loadFromFile(filename: String): Either[HbConfig, Error] = {
+  def loadFromFile(filename: String): Either[hbConfig, Error] = {
     println(s"\nLoading hb configuration from file: $filename")
     var fileString: String = ""
     try {
@@ -91,11 +91,11 @@ object HbConfig {
       case Right(err) => return Right(err)
     }
 
-    // Parse HbConfig from YAML AST
-    val generic = yamlAst.convertTo[HbGeneric]
-    val taps = yamlAst.convertTo[HbTaps]
+    // Parse hbConfig from YAML AST
+    val generic = yamlAst.convertTo[hbGeneric]
+    val taps = yamlAst.convertTo[hbTaps]
 
-    val config = new HbConfig(generic.syntax_version, generic.resolution, taps.H.map(_ * (math.pow(2, generic.resolution - 1) / 2 - 1)).map(_.toInt), generic.gainBits)
+    val config = new hbConfig(generic.syntax_version, generic.resolution, taps.H.map(_ * (math.pow(2, generic.resolution - 1) / 2 - 1)).map(_.toInt), generic.gainBits)
 
     println("resolution:")
     println(config.resolution)

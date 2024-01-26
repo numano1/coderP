@@ -1,7 +1,7 @@
 // Finitie impulse filter
 package hb_universal
 import config._
-import config.{HbConfig}
+import config.{hbConfig}
 
 import java.io.File
 
@@ -27,7 +27,7 @@ class hb_universalIO(resolution: Int, gainBits: Int) extends Bundle {
   }
 }
 
-class hb_universal(config: HbConfig) extends Module {
+class hb_universal(config: hbConfig) extends Module {
     val io = IO(new hb_universalIO(resolution=config.resolution, gainBits=config.gainBits))
     val data_reso = config.resolution
     val calc_reso = config.resolution * 2
@@ -166,8 +166,8 @@ object hb_universal extends App with OptionParser {
 
   val config_file = options("config_file")
   val target_dir = options("td")
-  var hb_config: Option[HbConfig] = None
-  HbConfig.loadFromFile(config_file) match {
+  var hb_config: Option[hbConfig] = None
+  hbConfig.loadFromFile(config_file) match {
     case Left(config) => {
       hb_config = Some(config)
     }
