@@ -98,7 +98,7 @@ class hb_universal(config: HbConfig) extends Module {
         val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
         //(slowregs, inregs).zipped.map(_ := _)
         when(io.in.convmode.asBool){
-            slowregs(0):=inregs(1)
+            slowregs(0):=inregs(0)
             //slowregs(1):=inregs(0)
         }.otherwise{
             slowregs(0):=inregs(1)
