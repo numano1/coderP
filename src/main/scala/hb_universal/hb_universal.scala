@@ -9,7 +9,7 @@ import chisel3._
 import chisel3.experimental.FixedPoint
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 import chisel3.stage.ChiselGeneratorAnnotation
-
+import chisel3.util.ShiftRegister
 import dsptools._
 import dsptools.numbers.DspComplex
 
@@ -36,7 +36,7 @@ class hb_universal(config: hbConfig) extends Module {
     val calc_reso = config.resolution * 2
 
     // Inner clk div
-    val en_reg =  withClockAndReset((!(clock.asUInt)).asClock,reset){RegInit(0.U(1.W))} 
+    val en_reg =  withClockAndReset((!(clock.asUInt)).asClock,ShiftRegister(reset,2,0.B,true.B).asBool){RegInit(0.U(1.W))} 
     en_reg := io.control.enable_clk_div
     val fb_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
     val clk_div_2_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
