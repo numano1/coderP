@@ -97,6 +97,7 @@ ${MAINMODULE}: \$(VERILOGDIR)/${MAINMODULE}.v
 
 clean:
 	rm -f \$(VERILOGPATH)/*.v
+	rm -f \$(VERILOGPATH)/*.sv
 	rm -f \$(VERILOGPATH)/*.anno
 	rm -f \$(VERILOGPATH)/*.fir
 	#rm -rf \$(VERILOGPATH)

@@ -38,9 +38,13 @@ class hb_universal(config: hbConfig) extends Module {
     // Inner clk div
     val en_reg =  withClockAndReset((!(clock.asUInt)).asClock,ShiftRegister(reset,2,0.B,true.B).asBool){RegInit(0.U(1.W))} 
     en_reg := io.control.enable_clk_div
-    val fb_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
-    val clk_div_2_reg = withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){RegInit(0.U(1.W)) }
-    withClockAndReset((clock.asBool && en_reg.asBool).asClock,reset){ 
+    val enabled_clock =Wire(Clock())
+    enabled_clock:=(clock.asBool && en_reg.asBool).asClock
+    //dontTouch(enabled_clock)
+    val fb_reg = withClockAndReset(enabled_clock,reset){RegInit(0.U(1.W)) }
+
+    val clk_div_2_reg = withClockAndReset(enabled_clock,reset){RegInit(0.U(1.W)) }
+    withClockAndReset(enabled_clock,reset){ 
       fb_reg := !fb_reg
       clk_div_2_reg := !fb_reg
     }
