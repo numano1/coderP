@@ -58,8 +58,8 @@ class hb_universal(config: hbConfig) extends Module {
     println(coeff1_len)
     println("odd coeffs count:")
     println(coeff2_len)
-    val registerchain2 = withClock (clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
-    val registerchain1 = withClock(clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex.wire(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain2 = withClock (clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain1 = withClock(clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
     val subfil2 = registerchain2(coeff2_len)
     val subfil1 = registerchain1(coeff1_len)
 
@@ -68,13 +68,13 @@ class hb_universal(config: hbConfig) extends Module {
     val clk_mux_output = Mux(io.control.convmode.asBool,clk_div_2_reg.asBool,clock.asUInt.asBool).asClock
 
 
-    val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
+    val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
     withClock(clk_mux_input){
         inregs(0):= io.in.iptr_A
         inregs(1):=inregs(0)
     }
     
-    val outreg =withClock(clk_mux_output){ RegInit(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W)))}
+    val outreg =withClock(clk_mux_output){ RegInit(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))}
     withClock(clk_mux_output){ 
         when(io.control.convmode.asBool){
             outreg.real := ((subfil1.real + subfil2.real) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
@@ -94,7 +94,7 @@ class hb_universal(config: hbConfig) extends Module {
     io.out.Z := outreg
 
     withClock (clk_div_2_reg.asBool.asClock){
-        val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex.wire(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
+        val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
 
         when(io.control.convmode.asBool){
             slowregs(0):=inregs(0)
