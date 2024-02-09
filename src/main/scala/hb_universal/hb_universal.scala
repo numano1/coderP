@@ -29,7 +29,6 @@ class hb_universalIO(resolution: Int, gainBits: Int) extends Bundle {
     val clock = new hb_universalCLK()
     val in = new Bundle {
         val iptr_A = Input(DspComplex(SInt(resolution.W), SInt(resolution.W)))
-        val clk_slow = Input
     }
     val out = new Bundle {
         val Z = Output(DspComplex(SInt(resolution.W), SInt(resolution.W)))
@@ -49,14 +48,14 @@ class hb_universal(config: hbConfig) extends Module {
     println(coeff1_len)
     println("odd coeffs count:")
     println(coeff2_len)
-    val registerchain2 = withClock (io.clk.slow){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
-    val registerchain1 = withClock(io.clk.slow){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain2 = withClock (io.clock.slow){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain1 = withClock(io.clock.slow){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
     val subfil2 = registerchain2(coeff2_len)
     val subfil1 = registerchain1(coeff1_len)
 
 
-    val clk_mux_input = Mux(io.control.convmode.asBool,clock.asUInt.asBool,io.clk.slow.asUInt.asBool).asClock
-    val clk_mux_output = Mux(io.control.convmode.asBool,io.clk.slow.asUInt.asBool,clock.asUInt.asBool).asClock
+    val clk_mux_input = Mux(io.control.convmode.asBool,clock.asUInt.asBool,io.clock.slow.asUInt.asBool).asClock
+    val clk_mux_output = Mux(io.control.convmode.asBool,io.clock.slow.asUInt.asBool,clock.asUInt.asBool).asClock
 
 
     val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
@@ -72,10 +71,10 @@ class hb_universal(config: hbConfig) extends Module {
             outreg.imag := ((subfil1.imag + subfil2.imag) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
         
         }.otherwise{
-            when ((io.clk.slow.asUInt.asBool ^ io.control.output_switch) === true.B) { 
+            when ((io.clock.slow.asUInt.asBool ^ io.control.output_switch) === true.B) { 
                 outreg.real := (subfil1.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
                 outreg.imag := (subfil1.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-            }.elsewhen ((io.clk.slow.asUInt.asBool ^ io.control.output_switch) === false.B) { 
+            }.elsewhen ((io.clock.slow.asUInt.asBool ^ io.control.output_switch) === false.B) { 
                 outreg.real := (subfil2.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
                 outreg.imag := (subfil2.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
             }
@@ -84,7 +83,7 @@ class hb_universal(config: hbConfig) extends Module {
 
     io.out.Z := outreg
 
-    withClock (io.clk.slow){
+    withClock (io.clock.slow){
         val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
 
         when(io.control.convmode.asBool){
