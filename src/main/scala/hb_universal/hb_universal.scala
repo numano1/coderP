@@ -87,10 +87,10 @@ class hb_universal(config: hbConfig) extends Module {
             outreg.imag := ((subfil1.imag + subfil2.imag) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
         
         }.otherwise{
-            when ((clk_div_2_reg ^ io.control.output_switch) === true.B) { 
+            when ((io.clk.slow.asUInt.asBool ^ io.control.output_switch) === true.B) { 
                 outreg.real := (subfil1.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
                 outreg.imag := (subfil1.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-            }.elsewhen ((clk_div_2_reg ^ io.control.output_switch) === false.B) { 
+            }.elsewhen ((io.clk.slow.asUInt.asBool ^ io.control.output_switch) === false.B) { 
                 outreg.real := (subfil2.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
                 outreg.imag := (subfil2.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
             }
