@@ -13,17 +13,23 @@ import chisel3.util.ShiftRegister
 import dsptools._
 import dsptools.numbers.DspComplex
 
+class hb_universalCLK extends Bundle {
+    val slow   = Input(Clock())
+}
+
 class hb_universalCTRL(gainBits: Int) extends Bundle {
     val scale  = Input(UInt(gainBits.W))
     val convmode = Input(UInt(1.W))
     val output_switch = Input(UInt(1.W))
-    val enable_clk_div= Input(UInt(1.W))
+    //val enable_clk_div= Input(UInt(1.W))
 }
 
 class hb_universalIO(resolution: Int, gainBits: Int) extends Bundle {
     val control = new hb_universalCTRL(gainBits)
+    val clk = new hb_universalCLK()
     val in = new Bundle {
         val iptr_A = Input(DspComplex(SInt(resolution.W), SInt(resolution.W)))
+        val clk_slow = Input
     }
     val out = new Bundle {
         val Z = Output(DspComplex(SInt(resolution.W), SInt(resolution.W)))
@@ -36,20 +42,20 @@ class hb_universal(config: hbConfig) extends Module {
     val calc_reso = config.resolution * 2
 
     // Inner clk div
-    val not_clk = Wire(Clock())
-    not_clk :=(!(clock.asUInt)).asClock
-    val en_reg =  withClockAndReset(not_clk,ShiftRegister(reset,2,0.B,true.B).asBool){RegInit(0.U(1.W))} 
-    en_reg := io.control.enable_clk_div
-    val enabled_clock =Wire(Clock())
-    enabled_clock:=(clock.asBool && en_reg.asBool).asClock
+    //val not_clk = Wire(Clock())
+    //not_clk :=(!(clock.asUInt)).asClock
+    //val en_reg =  withClockAndReset(not_clk,ShiftRegister(reset,2,0.B,true.B).asBool){RegInit(0.U(1.W))} 
+    //en_reg := io.control.enable_clk_div
+    //val enabled_clock =Wire(Clock())
+    //enabled_clock:=(clock.asBool && en_reg.asBool).asClock
     //dontTouch(enabled_clock)
-    val fb_reg = withClockAndReset(enabled_clock,reset){RegInit(0.U(1.W)) }
+    //val fb_reg = withClockAndReset(enabled_clock,reset){RegInit(0.U(1.W)) }
 
-    val clk_div_2_reg = withClockAndReset(enabled_clock,reset){RegInit(0.U(1.W)) }
-    withClockAndReset(enabled_clock,reset){ 
-      fb_reg := !fb_reg
-      clk_div_2_reg := !fb_reg
-    }
+    //val clk_div_2_reg = withClockAndReset(enabled_clock,reset){RegInit(0.U(1.W)) }
+    //withClockAndReset(enabled_clock,reset){ 
+    //  fb_reg := !fb_reg
+    //  clk_div_2_reg := !fb_reg
+    //}
    
     //The half clock rate domain
     val coeff1_len=(config.H.indices.filter(_ % 2 == 0).map(config.H(_))).size
@@ -58,14 +64,14 @@ class hb_universal(config: hbConfig) extends Module {
     println(coeff1_len)
     println("odd coeffs count:")
     println(coeff2_len)
-    val registerchain2 = withClock (clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
-    val registerchain1 = withClock(clk_div_2_reg.asBool.asClock){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain2 = withClock (io.clk.slow){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val registerchain1 = withClock(io.clk.slow){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
     val subfil2 = registerchain2(coeff2_len)
     val subfil1 = registerchain1(coeff1_len)
 
 
-    val clk_mux_input = Mux(io.control.convmode.asBool,clock.asUInt.asBool,clk_div_2_reg.asBool).asClock
-    val clk_mux_output = Mux(io.control.convmode.asBool,clk_div_2_reg.asBool,clock.asUInt.asBool).asClock
+    val clk_mux_input = Mux(io.control.convmode.asBool,clock.asUInt.asBool,io.clk.slow.asUInt.asBool).asClock
+    val clk_mux_output = Mux(io.control.convmode.asBool,io.clk.slow.asUInt.asBool,clock.asUInt.asBool).asClock
 
 
     val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
@@ -93,7 +99,7 @@ class hb_universal(config: hbConfig) extends Module {
 
     io.out.Z := outreg
 
-    withClock (clk_div_2_reg.asBool.asClock){
+    withClock (io.clk.slow){
         val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
 
         when(io.control.convmode.asBool){
