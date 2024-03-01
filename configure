@@ -75,12 +75,12 @@ TEST_TARGETS = \$(foreach name,\$(TEST_MODULES), test_\$(name))
 SBT=sbt -J-Xmx16G -J-Xss8M
 
 # Default parameters
-config_file ?= "hb-config.yml"
-td ?= "verilog/"
+config_file ?= "configs/hb1-config.yml"
+td ?= "\$(VERILOGDIR)"
+
+gen_coeffs ?= false
 
 MAINPARAMS = -config_file \$(config_file) -td \$(td)
-
-
 
 TOUCH=touch -r
 `for i in ${VPATHDIRS}; do
@@ -93,14 +93,13 @@ all: ${MAINMODULE}
 
 ${MAINMODULE}: \$(VERILOGDIR)/${MAINMODULE}.v
 \$(VERILOGDIR)/${MAINMODULE}.v:
-	\$(SBT) 'runMain ${PACKAGE}.${MAINMODULE} \$(MAINPARAMS) -td \$(VERILOGDIR)'
+	if [ \$(gen_coeffs) == true ]; then python3 gen_coeffs.py; fi
+	\$(SBT) 'runMain ${PACKAGE}.${MAINMODULE} \$(MAINPARAMS)'
 
 clean:
 	rm -f \$(VERILOGPATH)/*.v
 	rm -f \$(VERILOGPATH)/*.anno
 	rm -f \$(VERILOGPATH)/*.fir
-	#rm -rf \$(VERILOGPATH)
-	#rm -rf \$(DEPDIR)
 
 #Generate cleanup recipes for individual modules
 `for i in ${MODULES}; do

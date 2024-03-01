@@ -35,7 +35,7 @@ object HbConfig {
   // TODO: Update this to always match the major version number of the release
   val syntaxVersion = 2
 
-  /** Exception type for FIR config parsing errors */
+  /** Exception type for HB config parsing errors */
   class HbConfigParseException(msg: String) extends Exception(msg)
 
   /** Type for representing error return values from a function */
