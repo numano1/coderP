@@ -38,6 +38,7 @@ object hbConfig {
   /** Exception type for FIR config parsing errors */
   class hbConfigParseException(msg: String) extends Exception(msg)
 
+
   /** Type for representing error return values from a function */
   case class Error(msg: String) {
     /** Throw a parsing exception with a debug message. */
