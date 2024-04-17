@@ -6,6 +6,7 @@ import config.{hbConfig}
 import java.io.File
 
 import chisel3._
+import chisel3.util.{ShiftRegister}
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 import chisel3.stage.ChiselGeneratorAnnotation
 
@@ -20,7 +21,8 @@ class hb_universalCTRL(gainBits: Int) extends Bundle {
     val scale  = Input(UInt(gainBits.W))
     val convmode = Input(UInt(1.W))
     val output_switch = Input(UInt(1.W))
-    //val enable_clk_div= Input(UInt(1.W))
+    val in_valid = Input(UInt(1.W))
+    val out_valid = Output(UInt(1.W))
 }
 
 class hb_universalIO(resolution: Int, gainBits: Int) extends Bundle {
@@ -36,61 +38,45 @@ class hb_universalIO(resolution: Int, gainBits: Int) extends Bundle {
 
 class hb_universal(config: hbConfig) extends Module {
     val io = IO(new hb_universalIO(resolution=config.resolution, gainBits=config.gainBits))
-    val data_reso = config.resolution
-    val calc_reso = config.resolution * 2
-
-   
-    //The half clock rate domain
     val coeff1_len=(config.H.indices.filter(_ % 2 == 0).map(config.H(_))).size
     val coeff2_len=(config.H.indices.filter(_ % 2 == 1).map(config.H(_))).size
     println("even coeffs count:")
     println(coeff1_len)
     println("odd coeffs count:")
     println(coeff2_len)
-    val registerchain2 = withClock (io.clock.slow){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
+    val data_reso = config.resolution
+    val calc_reso = config.resolution * 2
+    val path_size = 1 + 2 + 2 + 2 + 2 + 3 //inreg0 + inreg1 + slowreg + (chain + ???) (with fast clk)
+
+    // Valid signal
+    val valid = ShiftRegister(io.control.in_valid, path_size, !reset.asBool)
+    io.control.out_valid := valid   
+
+    //The half clock rate domain
+    val registerchain2 = withClock(io.clock.slow){RegInit(VecInit(Seq.fill(coeff2_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
     val registerchain1 = withClock(io.clock.slow){RegInit(VecInit(Seq.fill(coeff1_len + 1)(DspComplex(0.S(calc_reso.W), 0.S(calc_reso.W)))))}
     val subfil2 = registerchain2(coeff2_len)
     val subfil1 = registerchain1(coeff1_len)
 
 
-    val clk_mux_input = Mux(io.control.convmode.asBool,clock.asUInt.asBool,io.clock.slow.asUInt.asBool).asClock
-    val clk_mux_output = Mux(io.control.convmode.asBool,io.clock.slow.asUInt.asBool,clock.asUInt.asBool).asClock
+    val clk_mux_input = Mux(io.control.convmode.asBool, clock.asUInt.asBool, io.clock.slow.asUInt.asBool).asClock
+    val clk_mux_output = Mux(io.control.convmode.asBool, io.clock.slow.asUInt.asBool, clock.asUInt.asBool).asClock
 
 
     val inregs = withClock(clk_mux_input){RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))))} //registers for sampling rate reduction
     withClock(clk_mux_input){
-        inregs(0):= io.in.iptr_A
-        inregs(1):=inregs(0)
+        inregs(0) := io.in.iptr_A
+        inregs(1) := inregs(0)
     }
-    
-    val outreg =withClock(clk_mux_output){ RegInit(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))}
-    withClock(clk_mux_output){ 
-        when(io.control.convmode.asBool){
-            outreg.real := ((subfil1.real + subfil2.real) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-            outreg.imag := ((subfil1.imag + subfil2.imag) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-        
-        }.otherwise{
-            when ((io.clock.slow.asUInt.asBool ^ io.control.output_switch) === true.B) { 
-                outreg.real := (subfil1.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-                outreg.imag := (subfil1.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-            }.elsewhen ((io.clock.slow.asUInt.asBool ^ io.control.output_switch) === false.B) { 
-                outreg.real := (subfil2.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-                outreg.imag := (subfil2.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
-            }
-        }
-    }
-
-    io.out.Z := outreg
 
     withClock (io.clock.slow){
         val slowregs  = RegInit(VecInit(Seq.fill(2)(DspComplex(0.S(data_reso.W), 0.S(data_reso.W))))) //registers for sampling rate reduction
-
         when(io.control.convmode.asBool){
-            slowregs(0):=inregs(0)
+            slowregs(0) := inregs(0)
         }.otherwise{
-            slowregs(0):=inregs(1)
+            slowregs(0) := inregs(1)
         }
-        slowregs(1):=inregs(1)
+        slowregs(1) := inregs(1)
 
         val sub1coeffs = config.H.indices.filter(_ % 2 == 0).map(config.H(_)) //Even coeffs for Fir1
         println("HB even coeffs")
@@ -121,7 +107,25 @@ class hb_universal(config: hbConfig) extends Module {
                 registerchain2(i + 1).imag := registerchain2(i).imag + tapped2(i).imag
             }
         }
-    }    
+    }
+
+    val outreg = withClock(clk_mux_output){RegInit(DspComplex(0.S(data_reso.W), 0.S(data_reso.W)))}
+    withClock(clk_mux_output){ 
+        when(io.control.convmode.asBool){
+            outreg.real := ((subfil1.real + subfil2.real) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+            outreg.imag := ((subfil1.imag + subfil2.imag) << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+        }.otherwise{
+            when((io.clock.slow.asUInt.asBool ^ io.control.output_switch) === true.B) { 
+                outreg.real := (subfil1.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+                outreg.imag := (subfil1.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+            }.elsewhen((io.clock.slow.asUInt.asBool ^ io.control.output_switch) === false.B) { 
+                outreg.real := (subfil2.real << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+                outreg.imag := (subfil2.imag << io.control.scale)(calc_reso - 1, calc_reso - data_reso).asSInt
+            }
+        }
+    }
+
+    io.out.Z := outreg    
 }
 
 
