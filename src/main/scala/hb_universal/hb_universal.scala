@@ -49,7 +49,7 @@ class hb_universal(config: hbConfig) extends Module {
     val path_size = 1 + 2 + 2 + 2 + 2 + 3 //inreg0 + inreg1 + slowreg + (chain + ???) (with fast clk)
 
     // Valid signal
-    val valid = ShiftRegister(io.control.in_valid, path_size, !reset.asBool)
+    val valid = ShiftRegister(io.control.in_valid, path_size, 0.U, !reset.asBool)
     io.control.out_valid := valid   
 
     //The half clock rate domain
