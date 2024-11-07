@@ -42,10 +42,10 @@ SCALAPATH=${ROOTPATH}/src/main/scala
 FIRRTL_JAR="$ROOTPATH/rocket-chip/firrtl/utils/bin/firrtl.jar"
 
 VPATHDIRS=`find ${SCALAPATH}/* -type d -exec basename '{}' ';'`
-MAINMODULE="hb_universal"
+MAINMODULE="spi_master"
 MODULES=""
 TEST_MODULES=""
-PACKAGE="hb_universal"
+PACKAGE="spi_master"
 
 
 ############################# MAKEFILE   ####################################
@@ -75,12 +75,11 @@ TEST_TARGETS = \$(foreach name,\$(TEST_MODULES), test_\$(name))
 SBT=sbt -J-Xmx16G -J-Xss8M
 
 # Default parameters
-config_file ?= "configs/hb1-config.yml"
+
 td ?= "\$(VERILOGDIR)"
 
-gen_coeffs ?= false
 
-MAINPARAMS = -config_file \$(config_file) -td \$(td)
+MAINPARAMS = -td \$(td)
 
 TOUCH=touch -r
 `for i in ${VPATHDIRS}; do
@@ -93,7 +92,6 @@ all: ${MAINMODULE}
 
 ${MAINMODULE}: \$(VERILOGDIR)/${MAINMODULE}.v
 \$(VERILOGDIR)/${MAINMODULE}.v:
-	if [ \$(gen_coeffs) == true ]; then python3 gen_coeffs.py; fi
 	\$(SBT) 'runMain ${PACKAGE}.${MAINMODULE} \$(MAINPARAMS)'
 
 clean:

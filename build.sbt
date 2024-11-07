@@ -11,11 +11,11 @@ ThisBuild / evictionErrorLevel := Level.Info
 
 val chiselVersion = "3.5.6"
 
-resolvers += "A-Core Gitlab" at "https://gitlab.com/api/v4/groups/13348068/-/packages/maven"
 
-lazy val hb_universal = (project in file("."))
+
+lazy val spi_master = (project in file("."))
   .settings(
-    name := "hb_universal",
+    name := "spi_master",
     libraryDependencies ++= Seq(
       "edu.berkeley.cs" %% "chisel3" % chiselVersion,
       "edu.berkeley.cs" %% "dsptools" % "1.5.6",
