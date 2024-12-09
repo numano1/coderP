@@ -2,6 +2,9 @@
 #Init submodules in this dir, if any
 DIR="$( cd "$( dirname $0 )" && pwd )"
 SUBMODULES="\
+    clockgen\
+    transceiver\
+    receiver
      
 "
 

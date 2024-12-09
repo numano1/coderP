@@ -1,25 +1,23 @@
 import scala.sys.process._
-// OBS: sbt._ has also process. Importing scala.sys.process
-// and explicitly using it ensures the correct operation
 
-ThisBuild / scalaVersion     := "2.13.8"
-ThisBuild / version          := scala.sys.process.Process("git rev-parse --short HEAD").!!.mkString.replaceAll("\\s", "")+"-SNAPSHOT"
-ThisBuild / organization     := "Chisel-blocks"
+// Global settings
+ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / version := scala.sys.process.Process("git rev-parse --short HEAD").!!.mkString.replaceAll("\\s", "") + "-SNAPSHOT"
+ThisBuild / organization := "Chisel-blocks"
 
-// Suppresses eviction errors for new sbt versions
+// Suppress eviction warnings
 ThisBuild / evictionErrorLevel := Level.Info
 
 val chiselVersion = "3.5.6"
 
-
-
-lazy val spi_master = (project in file("."))
+// Top Module: qspi_master
+lazy val qspi_master = (project in file("."))
+  .aggregate(clockgen, receiver, transceiver) // Aggregate submodules
   .settings(
-    name := "spi_master",
+    name := "qspi_master",
     libraryDependencies ++= Seq(
       "edu.berkeley.cs" %% "chisel3" % chiselVersion,
-      "edu.berkeley.cs" %% "dsptools" % "1.5.6",
-      "net.jcazevedo" %% "moultingyaml" % "0.4.2"
+      "edu.berkeley.cs" %% "chiseltest" % "0.5.5" % "test"
     ),
     scalacOptions ++= Seq(
       "-language:reflectiveCalls",
@@ -32,9 +30,12 @@ lazy val spi_master = (project in file("."))
     addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % chiselVersion cross CrossVersion.full)
   )
 
-// Parse the version of a submodle from the git submodule status
-// for those modules not version controlled by Maven or equivalent
-def gitSubmoduleHashSnapshotVersion(submod: String): String = {
-    val shellcommand =  "git submodule status | grep %s | awk '{print substr($1,0,7)}'".format(submod)
-    scala.sys.process.Process(Seq("/bin/sh", "-c", shellcommand )).!!.mkString.replaceAll("\\s", "")+"-SNAPSHOT"
-}
+// Submodule: Clockgen
+lazy val clockgen = (project in file("clockgen"))
+
+
+// Submodule: Receiver
+lazy val receiver = (project in file("receiver"))
+
+// Submodule: Transceiver
+lazy val transceiver = (project in file("transceiver"))

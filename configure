@@ -42,10 +42,10 @@ SCALAPATH=${ROOTPATH}/src/main/scala
 FIRRTL_JAR="$ROOTPATH/rocket-chip/firrtl/utils/bin/firrtl.jar"
 
 VPATHDIRS=`find ${SCALAPATH}/* -type d -exec basename '{}' ';'`
-MAINMODULE="spi_master"
+MAINMODULE="qspi_master"
 MODULES=""
 TEST_MODULES=""
-PACKAGE="spi_master"
+PACKAGE="qspi_master"
 
 
 ############################# MAKEFILE   ####################################

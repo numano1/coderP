@@ -1,0 +1,725 @@
+# //  Questa Sim-64
+# //  Version 10.6_1 linux_x86_64 Jan 30 2017
+# //
+# //  Copyright 1991-2017 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading project work
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:13:42 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+# ** Error: (vsim-3063) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(107): Port 'C' not found in the connected module (2nd connection).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash_module File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v
+# ** Warning: (vsim-3015) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(107): [PCDPC] - Port size (32) does not match connection size (1) for port 'Vcc'. The port definition is at: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(77).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash_module File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v
+# Error loading design
+# End time: 18:13:43 on Dec 04,2024, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 2
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:16:30 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+# ** Warning: (vsim-3015) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(107): [PCDPC] - Port size (32) does not match connection size (1) for port 'Vcc'. The port definition is at: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v(8).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v
+add wave -position insertpoint sim/:tb_qspi_master:flash:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+quit -sim
+# End time: 18:38:16 on Dec 04,2024, Elapsed time: 0:21:46
+# Errors: 0, Warnings: 4
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:40:31 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+# ** Warning: (vsim-3015) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(107): [PCDPC] - Port size (32) does not match connection size (1) for port 'Vcc'. The port definition is at: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v(8).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+restart -f
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# ** Warning: (vsim-3015) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(107): [PCDPC] - Port size (32) does not match connection size (1) for port 'Vcc'. The port definition is at: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v(8).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v
+add wave -position insertpoint sim/:tb_qspi_master:flash:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+quit -sim
+# End time: 18:43:28 on Dec 04,2024, Elapsed time: 0:02:57
+# Errors: 0, Warnings: 2
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:44:16 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+add wave -position insertpoint sim/:tb_qspi_master:flash:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4110)
+#    Time: 0 ps  Iteration: 1  Instance: :tb_qspi_master:flash:DUT:mem
+# [0 ns] ==INFO== 2. Load memory content from file: "mem_Q128.vmf".
+# [0 ns] ==INFO== Power up: polling allowed.
+# [0 ns] ==INFO== Protocol selected is extended
+# [0 ns] ==INFO== Hold condition disabled: communication with the device has been activated.
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+# [150000 ns] ==INFO== Power up: device fully accessible.
+# [150000 ns] ==INFO== Protocol selected is extended
+# [150000 ps] ==INFO== Single Transfer Rate selected
+# [2586000 ns] **WARNING** Command Not Recognized. aa 0 0
+quit -sim
+# End time: 18:46:15 on Dec 04,2024, Elapsed time: 0:01:59
+# Errors: 0, Warnings: 4
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:47:06 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+# ** Warning: (vsim-3015) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(114): [PCDPC] - Port size (32) does not match connection size (1) for port 'Vcc'. The port definition is at: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v(8).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v
+add wave -position insertpoint sim/:tb_qspi_master:flash:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+quit -sim
+# End time: 18:48:13 on Dec 04,2024, Elapsed time: 0:01:07
+# Errors: 0, Warnings: 4
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:49:34 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+# ** Warning: (vsim-3015) /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/tb_qspi_master.v(114): [PCDPC] - Port size (32) does not match connection size (1) for port 'Vcc'. The port definition is at: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v(8).
+#    Time: 0 ps  Iteration: 0  Instance: :tb_qspi_master:flash File: /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/flash_module.v
+add wave -position insertpoint sim/:tb_qspi_master:flash:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+quit -sim
+# End time: 18:50:26 on Dec 04,2024, Elapsed time: 0:00:52
+# Errors: 0, Warnings: 4
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v failed with 3 errors.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 7 failed with 9 errors.
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 18:52:34 on Dec 04,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+add wave -position insertpoint sim/:tb_qspi_master:flash:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4110)
+#    Time: 0 ps  Iteration: 1  Instance: :tb_qspi_master:flash:DUT:mem
+# [0 ns] ==INFO== 2. Load memory content from file: "mem_Q128.vmf".
+# [0 ns] ==INFO== Power up: polling allowed.
+# [0 ns] ==INFO== Protocol selected is extended
+# [0 ns] ==INFO== Hold condition disabled: communication with the device has been activated.
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+# [150000 ns] ==INFO== Power up: device fully accessible.
+# [150000 ns] ==INFO== Protocol selected is extended
+# [150000 ps] ==INFO== Single Transfer Rate selected
+# [2586000 ns] **WARNING** Command Not Recognized. aa 0 0
+quit -sim
+# End time: 14:51:43 on Dec 05,2024, Elapsed time: 19:59:09
+# Errors: 0, Warnings: 4
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v failed with 1 errors.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 7 failed with 7 errors.
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v failed with 1 errors.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 7 failed with 7 errors.
+# Compile of Decoders.h failed with 1 errors.
+# Compile of DevParam.h failed with 1 errors.
+# Compile of PLRSDetectors.h failed with 1 errors.
+# Compile of flash_module.v was successful.
+# Compile of StackDecoder.h failed with 1 errors.
+# Compile of TimingData.h failed with 1 errors.
+# Compile of UserData.h failed with 1 errors.
+# Compile of N25Qxxx.v was successful.
+# Compile of qspi_master.v was successful.
+# Compile of transceiver.v was successful.
+# Compile of receiver.sv was successful.
+# Compile of clockgen.v was successful.
+# Compile of tb_qspi_master.v was successful.
+# Compile of UserData.h~ was successful.
+# 14 compiles, 6 failed with 6 errors.
+vsim -voptargs=+acc work.tb_qspi_master
+# vsim -voptargs="+acc" work.tb_qspi_master 
+# Start time: 15:05:54 on Dec 05,2024
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# Loading work.tb_qspi_master
+# Loading work.qspi_master
+# Loading work.clockgen
+# Loading sv_std.std
+# Loading work.receiver
+# Loading work.transceiver
+# Loading work.flash_module
+# Loading work.N25Qxxx
+# Loading work.CUIdecoder
+# Loading work.CUIdecoderEFI_MSE
+# Loading work.Memory
+# Loading work.UtilFunctions
+# Loading work.GeneralPurposeRegister
+# Loading work.Program
+# Loading work.StatusRegister
+# Loading work.FlagStatusRegister
+# Loading work.NonVolatileConfigurationRegister
+# Loading work.VolatileEnhancedConfigurationRegister
+# Loading work.VolatileConfigurationRegister
+# Loading work.FlashDiscoveryParameter
+# Loading work.Read
+# Loading work.LockManager
+# Loading work.LockManager4KB
+# Loading work.PPBManager
+# Loading work.PPBLockBitRegister
+# Loading work.PasswordRegister
+# Loading work.ASPRegister
+# Loading work.ProtectionManagementRegister
+# Loading work.TimingCheck
+# Loading work.DualQuadOps
+# Loading work.OTP_memory
+# Loading work.PLRSpart1Detect
+# Loading work.PLRSpart2Detect
+# Loading work.DebugModule
+add wave -position insertpoint sim/:tb_qspi_master:uut:transmitter:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4110)
+#    Time: 0 ps  Iteration: 1  Instance: :tb_qspi_master:flash:DUT:mem
+# [0 ns] ==INFO== 2. Load memory content from file: "mem_Q128.vmf".
+# [0 ns] ==INFO== Power up: polling allowed.
+# [0 ns] ==INFO== Protocol selected is extended
+# [0 ns] ==INFO== Hold condition disabled: communication with the device has been activated.
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+# [150000 ns] ==INFO== Power up: device fully accessible.
+# [150000 ns] ==INFO== Protocol selected is extended
+# [150000 ps] ==INFO== Single Transfer Rate selected
+# [2585000 ns] COMMAND DECODED: Write Enable , withAddr=00000000, with2Addr=00000000, with4Addr=00000000, cmdcode=06 
+# [2585000 ns] COMMAND RECOGNIZED: Write Enable.
+#   [2755000 ns] Command execution completed: WEL bit set.
+restart -f
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+add wave -position insertpoint sim/:tb_qspi_master:uut:*
+run
+# ==============================================
+# ===INFO=== Model Configuration Info
+# ===INFO=== Device Name: MT25QL128ABB8E0
+# ===INFO=== DQ3 = HOLD pin
+# ===INFO=== XIP type = Numonyx
+# ===INFO=== VCC 3V
+# ==============================================
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4110)
+#    Time: 0 ps  Iteration: 1  Instance: :tb_qspi_master:flash:DUT:mem
+# [0 ns] ==INFO== 2. Load memory content from file: "mem_Q128.vmf".
+# [0 ns] ==INFO== Power up: polling allowed.
+# [0 ns] ==INFO== Protocol selected is extended
+# [0 ns] ==INFO== Hold condition disabled: communication with the device has been activated.
+# ** Warning: (vsim-7) Failed to open readmem file "mem_Q128.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(4100)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:mem
+# [1000 ns] ==INFO== 1. Load memory content from file: "mem_Q128.vmf".
+# ** Warning: (vsim-7) Failed to open readmem file "sfdp.vmf" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/MT25QU128ABB8E0_VG17/code/N25Qxxx.v(7895)
+#    Time: 1 ns  Iteration: 0  Instance: :tb_qspi_master:flash:DUT:FlashDiscPar
+# [1000 ns] ==INFO== Load flash discovery paramater table content from file: "sfdp.vmf".
+# [150000 ns] ==INFO== Power up: device fully accessible.
+# [150000 ns] ==INFO== Protocol selected is extended
+# [150000 ps] ==INFO== Single Transfer Rate selected
+# [2585000 ns] COMMAND DECODED: Write Enable , withAddr=00000000, with2Addr=00000000, with4Addr=00000000, cmdcode=06 
+# [2585000 ns] COMMAND RECOGNIZED: Write Enable.
+#   [2755000 ns] Command execution completed: WEL bit set.
+quit -sim
+# End time: 15:20:05 on Dec 05,2024, Elapsed time: 0:14:11
+# Errors: 0, Warnings: 3
