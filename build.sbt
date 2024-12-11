@@ -12,7 +12,7 @@ val chiselVersion = "3.5.6"
 
 // Top Module: qspi_master
 lazy val qspi_master = (project in file("."))
-  .aggregate(clockgen, receiver, transceiver) // Aggregate submodules
+  .aggregate(clockgen, rx, tx) // Aggregate submodules
   .settings(
     name := "qspi_master",
     libraryDependencies ++= Seq(
@@ -35,7 +35,7 @@ lazy val clockgen = (project in file("clockgen"))
 
 
 // Submodule: Receiver
-lazy val receiver = (project in file("receiver"))
+lazy val rx = (project in file("rx"))
 
 // Submodule: Transceiver
-lazy val transceiver = (project in file("transceiver"))
+lazy val tx = (project in file("tx"))

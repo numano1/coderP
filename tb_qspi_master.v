@@ -34,15 +34,10 @@ module tb_qspi_master;
     wire sdi3;
     wire [2:0] io_debug_state;
     wire io_quad_mode;
-    wire io_tx_en;
-    wire io_rx_en;
     reg flash_reset;
     wire [3:0] DQ;
-    reg [31:0] Vcc_flash; // Declare Vcc as a 32-bit register
-    wire Tx_done;
-    wire Rx_done;
-    reg done;
-    wire [6:0] status;
+    reg [31:0] Vcc_flash; 
+    
 
     // Assignments for DQ with single drivers
 assign DQ[3] = (((io_debug_state >= 1) && (io_debug_state <= 6)) || ((io_debug_state == 0) && (io_spi_wr == 1))) && io_quad_mode ? sdo3 :
@@ -80,27 +75,22 @@ assign DQ[0] = (((io_debug_state >= 1) && (io_debug_state <= 6)) || ((io_debug_s
         .io_data_rx_ready(io_data_rx_ready),
         .io_data_rx_valid(io_data_rx_valid),
         .io_data_rx_bits(io_data_rx_bits),
-        .io_spi_rd(io_spi_rd),
-        .io_spi_wr(io_spi_wr),
-        .io_spi_qrd(io_spi_qrd),
-        .io_spi_qwr(io_spi_qwr),
+        .io_single_read(io_spi_rd),
+        .io_single_write(io_spi_wr),
+        .io_quad_read(io_spi_qrd),
+        .io_quad_write(io_spi_qwr),
         .io_spi_clk(io_spi_clk),
         .io_cs(io_cs),
-        .io_spi_sdo0(sdo0),
-        .io_spi_sdo1(sdo1),
-        .io_spi_sdo2(sdo2),
-        .io_spi_sdo3(sdo3),
-        .io_spi_sdi0(sdi0),
-        .io_spi_sdi1(sdi1),
-        .io_spi_sdi2(sdi2),
-        .io_spi_sdi3(sdi3),
-        .io_debug_state(io_debug_state),
-        .io_quad_mode(io_quad_mode),
-        .io_tx_en(io_tx_en),
-        .io_rx_en(io_rx_en),
-        .io_Tx_done(Tx_done),
-        .io_Rx_done(Rx_done),
-        .io_spi_status(status)
+        .io_sdo0(sdo0),
+        .io_sdo1(sdo1),
+        .io_sdo2(sdo2),
+        .io_sdo3(sdo3),
+        .io_sdi0(sdi0),
+        .io_sdi1(sdi1),
+        .io_sdi2(sdi2),
+        .io_sdi3(sdi3),
+        .io_state(io_debug_state),
+        .io_quad_mode(io_quad_mode)
     );
 
     // Flash Module Instantiation
@@ -276,31 +266,7 @@ assign DQ[0] = (((io_debug_state >= 1) && (io_debug_state <= 6)) || ((io_debug_s
         
     end
 
-    // Always block to monitor Tx_done
-    /*always @(negedge clock) begin
-        if (Tx_done) begin
-            io_cmd <= 32'hB1000000;
-            io_cmd_len <= 6'd8;
-            done <= 1'b0;
-            
-        end
-    end*/
-
-    /*initial begin
-        done = 0
-        wait(done)
-        #10
-        io_cmd = 32'h00000000;
-        io_cmd_len = 6'd0;
-     
-        io_data_len = 16'd16;
-        io_data_tx_bits = 32'hF7AF0000;
-        io_data_tx_valid = 1'b1;
-        #10
-        io_data_len = 16'd0;
-        io_data_tx_bits = 32'h00000000;
-        io_data_tx_valid = 1'b0;
-        io_spi_wr = 1'b0;*/
+    
     
 endmodule
 

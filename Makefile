@@ -25,8 +25,8 @@ MAINPARAMS = -td $(td)
 TOUCH=touch -r
 vpath %.scala $(SCALAPATH)/qspi_master
 vpath %.scala $(SCALAPATH)/clockgen
-vpath %.scala $(SCALAPATH)/receiver
-vpath %.scala $(SCALAPATH)/transceiver
+vpath %.scala $(SCALAPATH)/rx
+vpath %.scala $(SCALAPATH)/tx
 .PHONY: all help clean $(MODULES)
 
 

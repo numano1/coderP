@@ -4,9 +4,9 @@ import chisel3._
 import chisel3.util._
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 
-import transceiver._
+import tx._
 import clockgen._
-import receiver._
+import rx._
 
 class qspi_masterIo extends Bundle {
   val clk_div = Input(UInt(8.W))
@@ -24,96 +24,111 @@ class qspi_masterIo extends Bundle {
   val data_tx = Flipped(Decoupled(UInt(32.W)))
   val data_rx = Decoupled(UInt(32.W))
 
-  // SPI Control Signals
-  val spi_rd = Input(Bool())
-  val spi_wr = Input(Bool())
-  val spi_qrd = Input(Bool())
-  val spi_qwr = Input(Bool())
+  
+  val single_read = Input(Bool())
+  val single_write = Input(Bool())
+  val quad_read = Input(Bool())
+  val quad_write = Input(Bool())
 
   val spi_clk = Output(Bool())
   val cs = Output(Bool())
-  val spi_sdo0 = Output(Bool())
-  val spi_sdo1 = Output(Bool())
-  val spi_sdo2 = Output(Bool())
-  val spi_sdo3 = Output(Bool())
-  val spi_sdi0 = Input(Bool())
-  val spi_sdi1 = Input(Bool())
-  val spi_sdi2 = Input(Bool())
-  val spi_sdi3 = Input(Bool())
+  val sdo0 = Output(Bool())
+  val sdo1 = Output(Bool())
+  val sdo2 = Output(Bool())
+  val sdo3 = Output(Bool())
+  val sdi0 = Input(Bool())
+  val sdi1 = Input(Bool())
+  val sdi2 = Input(Bool())
+  val sdi3 = Input(Bool())
 
-  val debug_state = Output(UInt(3.W)) 
+  val state = Output(UInt(3.W)) 
   val quad_mode = Output(Bool())
-  val tx_en = Output(Bool())
-  val rx_en = Output(Bool())
-  val Tx_done = Output(Bool())
-  val Rx_done = Output(Bool())
-  val spi_status = Output(UInt(7.W))
-}
+  }
 
 
 class qspi_master extends Module {
   val io = IO(new qspi_masterIo)
 
-  val idle :: command :: address :: dummy :: datatx :: datarx :: wait_edge :: Nil = Enum(7)
+  val idle :: command :: address :: dummy :: datatx :: datarx :: wait_for_end :: Nil = Enum(7)
   val state = RegInit(idle)
 
-  // Debug port for state (test-only)
+ 
   
-  io.debug_state := state
+  io.state := state
   
 
   // Internal wires
   val clock_en = WireDefault(false.B)
+
   val cs_wire = WireDefault(true.B)
+
   val tx_en = WireDefault(false.B)
-  io.tx_en := tx_en
+  
   val rx_en = WireDefault(false.B)
-  io.rx_en := rx_en
+  
   val en_quad = Wire(Bool())
+
   val counter_tx = WireDefault(0.U(16.W))
+
   val counter_tx_upd = WireDefault(false.B)
+
   val counter_rx = WireDefault(0.U(16.W))
+
   val counter_rx_upd = WireDefault(false.B)
+
   val data_to_tx = Wire(Decoupled(UInt(32.W)))
+
   data_to_tx.valid := false.B
+
   data_to_tx.bits := 0.U
+
   val tx_done = Wire(Bool())
-  io.Tx_done := tx_done
+
+  
   val rx_done = Wire(Bool())
-  io.Rx_done := rx_done
+  
   val tx_clock_en = Wire(Bool())
+
   val rx_clock_en = Wire(Bool())
+
   val selector = WireDefault(0.U(3.W))
+
   val data_valid = WireDefault(false.B)
+
   val spi_fall = Wire(Bool())
+
   val spi_rise = Wire(Bool())
+
   val spi_clk = WireDefault(false.B) 
+
       io.spi_clk := spi_clk
-  val spi_status = WireDefault(0.U(7.W))
+
+  
 
   // Internal registers
   val en_quad_reg = RegInit(0.U(1.W))
+
   val do_rx = RegInit(false.B)
 
   // Instantiate submodules
   val clock_generator = Module(new clockgen)
-  val receiver = Module(new receiver)
-  val transmitter = Module(new transceiver)
+  val receiver = Module(new rx)
+  val transmitter = Module(new tx)
 
   // Quad enable logic
-  when(io.spi_qrd || io.spi_qwr) {
+  when(io.quad_read || io.quad_write) {
     en_quad_reg := true.B
   }.elsewhen(state === idle) {
     en_quad_reg := false.B
   }
 
-  when(io.spi_rd || io.spi_qrd) {
+  when(io.quad_read || io.single_read) {
     do_rx := true.B
   }.elsewhen(state === idle) {
     do_rx := false.B
   }
 
-  en_quad := io.spi_qrd || io.spi_qwr || en_quad_reg.asBool
+  en_quad := io.quad_read || io.quad_write || en_quad_reg.asBool
   io.quad_mode := en_quad
 
 
@@ -135,18 +150,18 @@ class qspi_master extends Module {
   transmitter.io.counter_in_upd := counter_tx_upd
   tx_done := transmitter.io.tx_done
   tx_clock_en := transmitter.io.clk_en_o
-  io.spi_sdo0 := transmitter.io.sdo0
-  io.spi_sdo1 := transmitter.io.sdo1
-  io.spi_sdo2 := transmitter.io.sdo2
-  io.spi_sdo3 := transmitter.io.sdo3
+  io.sdo0 := transmitter.io.sdo0
+  io.sdo1 := transmitter.io.sdo1
+  io.sdo2 := transmitter.io.sdo2
+  io.sdo3 := transmitter.io.sdo3
 
   // Receiver connections
   receiver.io.en := rx_en
   receiver.io.en_quad_in := en_quad
-  receiver.io.sdi0 := io.spi_sdi0
-  receiver.io.sdi1 := io.spi_sdi1
-  receiver.io.sdi2 := io.spi_sdi2
-  receiver.io.sdi3 := io.spi_sdi3
+  receiver.io.sdi0 := io.sdi0
+  receiver.io.sdi1 := io.sdi1
+  receiver.io.sdi2 := io.sdi2
+  receiver.io.sdi3 := io.sdi3
   receiver.io.counter_in := counter_rx
   receiver.io.counter_in_upd := counter_rx_upd
   rx_done := receiver.io.rx_done
@@ -175,13 +190,12 @@ class qspi_master extends Module {
     (selector === 4.U) -> data_to_tx.ready
   ))
 
-  io.spi_status := spi_status // Default value for all bits
+  
 
   // FSM
     switch(state) {
     is(idle) {
-      spi_status := 1.U
-      when(io.spi_rd || io.spi_wr || io.spi_qrd || io.spi_qwr) {
+      when(io.single_read || io.single_write || io.quad_read || io.quad_write) {
         cs_wire := false.B
         clock_en := true.B
         when(io.cmd_len =/= 0.U) {
@@ -199,7 +213,7 @@ class qspi_master extends Module {
           tx_en := true.B
           state := address
         }.elsewhen(io.data_len =/= 0.U) {
-          when(io.spi_qrd || io.spi_qrd) {
+          when(io.single_read || io.quad_read) {
             when(io.dummy_len =/= 0.U) {
               counter_tx := io.dummy_len
               counter_tx_upd := true.B
@@ -216,19 +230,17 @@ class qspi_master extends Module {
             counter_tx := io.data_len
             counter_tx_upd := true.B
             selector := 4.U
-            //data_valid := true.B
             tx_en := true.B
             state := datatx
           }
         }.otherwise {
-          //cs_wire := true.B
+          
           state := idle
         }
       }
     }
 
     is(command) {
-      spi_status := 2.U
       clock_en := true.B
       cs_wire := false.B
       when(tx_done) {
@@ -270,7 +282,7 @@ class qspi_master extends Module {
     }
 
     is(address) {
-      spi_status := 3.U
+      
       clock_en := true.B
       cs_wire := false.B
       when(tx_done) {
@@ -292,7 +304,6 @@ class qspi_master extends Module {
             counter_tx := io.data_len
             counter_tx_upd := true.B
             selector := 4.U
-            //data_valid := true.B
             tx_en := true.B
             state := datatx
           }
@@ -306,7 +317,6 @@ class qspi_master extends Module {
 
     is(dummy) {
       clock_en := true.B
-      spi_status := 4.U
       cs_wire := false.B
       when(tx_done) {
         when(io.data_len =/= 0.U) {
@@ -332,7 +342,7 @@ class qspi_master extends Module {
     }
 
     is(datatx) {
-      spi_status := 5.U
+     
       clock_en := tx_clock_en
       cs_wire := false.B
       selector := 4.U
@@ -345,26 +355,24 @@ class qspi_master extends Module {
       }
     }
 
-    is(datarx) {
-      spi_status := 6.U
+    is(datarx) { 
       clock_en := rx_clock_en
       cs_wire := false.B
       when(rx_done) {
-        state := wait_edge
+        state := wait_for_end
       }.otherwise {
         state := datarx
         rx_en := true.B
       }
     }
 
-    is(wait_edge) {
-      spi_status := 7.U
+    is(wait_for_end) {
       clock_en := true.B
       cs_wire := false.B
       when(spi_fall) {
         state := idle
       }.otherwise {
-        state := wait_edge
+        state := wait_for_end
       }
     }
   }

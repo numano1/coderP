@@ -1,4 +1,4 @@
-package receiver
+package rx
 
 import chisel3._
 import chisel3.util._
@@ -6,7 +6,7 @@ import chisel3.util.{log2Ceil}
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 
 
-class receiverIO extends Bundle {
+class rxIO extends Bundle {
   val en = Input(Bool())
   val rx_edge = Input(Bool())
   val rx_done = Output(Bool())
@@ -21,11 +21,11 @@ class receiverIO extends Bundle {
   val clk_en_o = Output(Bool())
 }
 
-class receiver extends Module {
-  val io = IO(new receiverIO)
+class rx extends Module {
+  val io = IO(new rxIO)
 
   // State definitions
-  val idle :: receive :: wait_rx_done :: wait_reg_done :: Nil = Enum(4)
+  val idle :: receive :: wait_rx_done :: wait_word_done :: Nil = Enum(4)
 
   // Registers for sequential logic
   val state = RegInit(idle) // Current state
@@ -40,7 +40,7 @@ class receiver extends Module {
   io.clk_en_o := false.B
 
   // Signals
-  val regDone = (!io.en_quad_in && counter(4, 0) === "b11111".U) || (io.en_quad_in && counter(2, 0) === "b111".U)
+  val word_Done = (!io.en_quad_in && counter(4, 0) === "b11111".U) || (io.en_quad_in && counter(2, 0) === "b111".U)
   val done = (counter === (counterTrgt - 1.U)) && io.rx_edge
 
   io.rx_done := done
@@ -72,10 +72,10 @@ class receiver extends Module {
           } .otherwise {
             state := wait_rx_done
           }
-        }.elsewhen(regDone) {
+        }.elsewhen(word_Done) {
           io.data.valid := true.B
           when(!io.data.ready) {
-            state := wait_reg_done
+            state := wait_word_done
           }
         }
       }
@@ -86,7 +86,7 @@ class receiver extends Module {
         state := idle
       }
     }
-    is(wait_reg_done) {
+    is(wait_word_done) {
       io.data.valid := true.B
       when(io.data.ready) {
         state := receive
@@ -101,10 +101,10 @@ class receiver extends Module {
 
 
 /** Generates verilog or sv*/
-object receiver extends App{
+object rx extends App{
   // Generate verilog
-  val annos = Seq(ChiselGeneratorAnnotation(() => new receiver()))
+  val annos = Seq(ChiselGeneratorAnnotation(() => new rx()))
   //(new ChiselStage).execute(arguments.toArray, annos)
   val sysverilog = (new ChiselStage).emitSystemVerilog(
-    new receiver)
+    new rx)
 }

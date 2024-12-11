@@ -1,11 +1,10 @@
-package transceiver
+package tx
 
 import chisel3._
 import chisel3.util._
-import chisel3.util.{log2Ceil}
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 
-class transceiverIO extends Bundle {
+class txIO extends Bundle {
   val en = Input(Bool())
   val tx_edge = Input(Bool())
   val tx_done = Output(Bool())
@@ -19,8 +18,8 @@ class transceiverIO extends Bundle {
   val data = Flipped(Decoupled(UInt(32.W))) // Using Decoupled for data with ready-valid
   val clk_en_o = Output(Bool())
 }
-class transceiver extends Module {
-  val io = IO(new transceiverIO)
+class tx extends Module {
+  val io = IO(new txIO)
 
   // States
   val idle :: transmit :: Nil = Enum(2)
@@ -102,9 +101,9 @@ counter := counter_next
   }
 }
 
-object transceiver extends App {
+object tx extends App {
   // Generate Verilog
-  val annos = Seq(ChiselGeneratorAnnotation(() => new transceiver()))
+  val annos = Seq(ChiselGeneratorAnnotation(() => new tx()))
   (new ChiselStage).execute(args, annos)
 }
 
