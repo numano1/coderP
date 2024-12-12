@@ -1,19 +1,25 @@
 package qspi_master
 
 import chisel3._
-import chisel3.experimental.{ExtModule, Analog}
-import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
+import chisel3.experimental.{Analog}
+import chisel3.util.HasBlackBoxResource
 
-class FlashWrapper extends BlackBox {
-  override def desiredName: String = "flash_module"
+class FlashWrapper extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
-    val S         = Input(Bool())
-    val C         = Input(Bool())
-    val HOLD_DQ3  = Analog(1.W)
-    val DQ0       = Analog(1.W)
-    val DQ1       = Analog(1.W)
-    val Vcc       = Input(UInt(32.W))
-    val Vpp_W_DQ2 = Analog(1.W)
-    val RESET2    = Input(Bool())
+    val debug_state_i = Input(UInt(3.W))
+    val spi_wr_i      = Input(Bool())
+    val quad_mode_i   = Input(Bool())
+    val cs_i          = Input(Bool())
+    val spi_clk_i     = Input(Bool())
+    val sdi0_i        = Input(Bool())
+    val sdi1_i        = Input(Bool())
+    val sdi2_i        = Input(Bool())
+    val sdi3_i        = Input(Bool())
+    val flash_reset_i = Input(Bool())
+    val sdo0_o        = Output(Bool())
+    val sdo1_o        = Output(Bool())
+    val sdo2_o        = Output(Bool())
+    val sdo3_o        = Output(Bool())
   })
+  addResource("/flash_wrapper.v")
 }
