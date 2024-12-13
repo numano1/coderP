@@ -5,6 +5,7 @@ import chisel3.experimental.{Analog}
 import chisel3.util.HasBlackBoxResource
 
 class FlashWrapper extends BlackBox with HasBlackBoxResource {
+  override def desiredName: String = "flash_wrapper"
   val io = IO(new Bundle {
     val debug_state_i = Input(UInt(3.W))
     val spi_wr_i      = Input(Bool())
