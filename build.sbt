@@ -9,6 +9,9 @@ ThisBuild / organization := "Chisel-blocks"
 ThisBuild / evictionErrorLevel := Level.Info
 
 val chiselVersion = "3.5.6"
+resolvers += "A-Core Gitlab" at "https://gitlab.com/api/v4/groups/13348068/-/packages/maven"
+val ambaVersion = settingKey[String]("The version of amba used for building.")
+ambaVersion := "0.7+"
 
 // Top Module: qspi_master
 lazy val qspi_master = (project in file("."))
@@ -17,7 +20,9 @@ lazy val qspi_master = (project in file("."))
     name := "qspi_master",
     libraryDependencies ++= Seq(
       "edu.berkeley.cs" %% "chisel3" % chiselVersion,
-      "edu.berkeley.cs" %% "chiseltest" % "0.5.5" % "test"
+      "edu.berkeley.cs" %% "chiseltest" % "0.5.5" % "test",
+      "Chisel-blocks"   %% "amba" % ambaVersion.value
+
     ),
     scalacOptions ++= Seq(
       "-language:reflectiveCalls",

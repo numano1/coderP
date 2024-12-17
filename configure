@@ -43,7 +43,7 @@ FIRRTL_JAR="$ROOTPATH/rocket-chip/firrtl/utils/bin/firrtl.jar"
 
 VPATHDIRS=`find ${SCALAPATH}/* -type d -exec basename '{}' ';'`
 MAINMODULE="qspi_master"
-MODULES=""
+MODULES="AXI4LQSPI"
 TEST_MODULES=""
 PACKAGE="qspi_master"
 
@@ -89,6 +89,9 @@ done`
 
 
 all: ${MAINMODULE}
+
+AXI4LQSPI:
+	\$(SBT) 'runMain ${PACKAGE}.AXI4LQSPI -td verilog'
 
 ${MAINMODULE}: \$(VERILOGDIR)/${MAINMODULE}.v
 \$(VERILOGDIR)/${MAINMODULE}.v:

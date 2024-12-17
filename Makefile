@@ -1,11 +1,11 @@
 #Directories
 VERILOGDIR ?= verilog
-VERILOGPATH = /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/verilog
-SCALAPATH = /home/pro/masters/ntabatab/a-core_thesydekick/Entities/qspi_master/chisel/src/main/scala
+VERILOGPATH = /home/pro/masters/ntabatab/a_core_qspi/Entities/acorechip/chisel/qspi_master/verilog
+SCALAPATH = /home/pro/masters/ntabatab/a_core_qspi/Entities/acorechip/chisel/qspi_master/src/main/scala
 #DEPDIR :=.depdir
 #$(shell mkdir -p $(DEPDIR) >/dev/null)
 $(shell mkdir -p $(VERILOGPATH) >/dev/null)
-MODULES= 
+MODULES= AXI4LQSPI
 TEST_MODULES=
 PACKAGE=qspi_master
 
@@ -32,6 +32,9 @@ vpath %.scala $(SCALAPATH)/tx
 
 all: qspi_master
 
+AXI4LQSPI:
+	$(SBT) 'runMain qspi_master.AXI4LQSPI -td verilog'
+
 qspi_master: $(VERILOGDIR)/qspi_master.v
 $(VERILOGDIR)/qspi_master.v:
 	$(SBT) 'runMain qspi_master.qspi_master $(MAINPARAMS)'
@@ -43,7 +46,13 @@ clean:
 	rm -f $(VERILOGPATH)/*.fir
 
 #Generate cleanup recipes for individual modules
-
+.PHONY: clean_AXI4LQSPI
+clean_AXI4LQSPI:
+	rm -f $(VERILOGPATH)/AXI4LQSPI.v
+	rm -f $(VERILOGPATH)/AXI4LQSPI.anno
+	rm -f $(VERILOGPATH)/AXI4LQSPI.fir
+	rm -f $(VERILOGPATH)/AXI4LQSPI_memmapped.conf
+	rm -f $(VERILOGPATH)/AXI4LQSPI_memmapped.v
 
 help:
 	@echo "configured modules are:";
