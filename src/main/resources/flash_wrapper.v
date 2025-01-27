@@ -1,3 +1,5 @@
+//`default_nettype none
+
 module flash_wrapper(
     input [2:0] debug_state_i,
     input       spi_wr_i,
@@ -14,6 +16,7 @@ module flash_wrapper(
     output      sdo2_o,
     output      sdo3_o
 );
+
     wire [3:0] DQ;
     wire sdo0;
     wire sdo1;
@@ -23,6 +26,15 @@ module flash_wrapper(
     wire sdi1;
     wire sdi2;
     wire sdi3;
+    assign sdo0 = sdi0_i;
+    assign sdo1 = sdi1_i;
+    assign sdo2 = sdi2_i;
+    assign sdo3 = sdi3_i;
+
+    assign sdo0_o = sdi0;
+    assign sdo1_o = sdi1;
+    assign sdo2_o = sdi2;
+    assign sdo3_o = sdi3;
 
     // Assignments for DQ with single drivers
     assign DQ[3] = (((debug_state_i >= 1) && (debug_state_i <= 6)) || ((debug_state_i == 0) && (spi_wr_i == 1))) && quad_mode_i ? sdo3 :

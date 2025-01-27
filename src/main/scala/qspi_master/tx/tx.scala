@@ -77,6 +77,9 @@ counter := counter_next
         counter_next := counter + 1.U
         dataInt := Mux(io.en_quad_in, Cat(dataInt(27, 0), 0.U(4.W)), Cat(dataInt(30, 0), 0.U(1.W)))
 
+
+         
+
         when(done) {
           counter_next := 0.U
           when(io.en && io.data.valid) {

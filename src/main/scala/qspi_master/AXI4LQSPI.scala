@@ -20,7 +20,7 @@ class AXI4LQSPI(
 
   
 
-  // Expose external QSPI IO
+  
   val io = IO(new Bundle {
     val spi_clk = Output(Bool())
     val cs = Output(Bool())
@@ -32,6 +32,10 @@ class AXI4LQSPI(
     val sdi1 = Input(Bool())
     val sdi2 = Input(Bool())
     val sdi3 = Input(Bool())
+    val state = Output(UInt(3.W))
+    val quad_mode = Output(Bool())
+    val flash_reset = Output(Bool())
+    val write = Output(Bool())
   })
 
   // QSPI Master instance
@@ -50,6 +54,9 @@ class AXI4LQSPI(
   QSPIMASTER.io.sdi1 := io.sdi1
   QSPIMASTER.io.sdi2 := io.sdi2
   QSPIMASTER.io.sdi3 := io.sdi3
+  io.state := QSPIMASTER.io.state
+  io.quad_mode := QSPIMASTER.io.quad_mode
+  
 
 
 
@@ -75,8 +82,7 @@ class AXI4LQSPI(
   val single_write = WireInit(false.B)
   val quad_read = WireInit(false.B)
   val quad_write = WireInit(false.B)
-  val state = WireInit(0.U(3.W)) 
-  val quad_mode = WireInit(false.B)
+  val flash_reset = WireInit(false.B)
 
 
 
@@ -84,8 +90,7 @@ class AXI4LQSPI(
   val rx_fifo = withClockAndReset(clk_rst.ACLK, !clk_rst.ARESETn) {Module(new Queue(UInt(32.W), entries = rx_fifo_depth))}
 
   val tx_fifoAlmostFull = withClockAndReset(clk_rst.ACLK, !clk_rst.ARESETn) {RegNext(tx_fifo.io.count >= (tx_fifo_depth - 2).U)}
-  val rx_fifoAlmostFull = withClockAndReset(clk_rst.ACLK, !clk_rst.ARESETn) {RegNext(rx_fifo.io.count >= (rx_fifo_depth - 2).U)}
-
+ 
  
 
 
@@ -103,11 +108,11 @@ class AXI4LQSPI(
     data_tx -> MemoryRange(begin = 32, end = 35, mode = MemoryMode.RW, write_stall_sig = (tx_fifoAlmostFull)),
     data_rx -> MemoryRange(begin = 36, end = 39, mode = MemoryMode.R),
     single_write -> MemoryRange(begin = 40, end = 43, mode = MemoryMode.RW), 
-    single_read -> MemoryRange(begin = 43, end = 47, mode = MemoryMode.RW),
+    single_read -> MemoryRange(begin = 44, end = 47, mode = MemoryMode.RW),
     quad_write -> MemoryRange(begin = 48, end = 51, mode = MemoryMode.RW),
     quad_read -> MemoryRange(begin = 52, end = 55, mode = MemoryMode.RW),
-    state -> MemoryRange(begin = 56, end = 59, mode = MemoryMode.R),
-    quad_mode -> MemoryRange(begin = 60, end = 63, mode = MemoryMode.R),
+    flash_reset -> MemoryRange(begin = 56, end = 59, mode = MemoryMode.RW)
+   
   )
   }
 
@@ -138,13 +143,14 @@ withClockAndReset(clk_rst.ACLK, !clk_rst.ARESETn) {
     QSPIMASTER.io.quad_read := quad_read
     QSPIMASTER.io.quad_write := quad_write
 
-    state := QSPIMASTER.io.state
-    quad_mode := QSPIMASTER.io.quad_mode
+   
     data_rx := rx_fifo.io.deq.bits
     rx_fifo.io.deq.ready := memory_map(data_rx).readStrobe
     rx_fifo.io.enq.bits := QSPIMASTER.io.data_rx.bits
     rx_fifo.io.enq.valid := QSPIMASTER.io.data_rx.valid
     QSPIMASTER.io.data_rx.ready := rx_fifo.io.enq.ready
+    io.flash_reset := flash_reset
+    io.write := single_write || quad_write
   }
 
 

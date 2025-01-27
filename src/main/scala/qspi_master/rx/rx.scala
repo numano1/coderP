@@ -32,12 +32,15 @@ class rx extends Module {
   val counter = RegInit(0.U(16.W))
   val counterTrgt = RegInit(8.U(16.W))
   val dataInt = RegInit(0.U(32.W))
+  val validNextCycle = RegInit(false.B)
 
   // Default output values
   io.rx_done := false.B
   io.data.valid := false.B
   io.data.bits := dataInt
   io.clk_en_o := false.B
+  io.data.valid := validNextCycle
+  validNextCycle := false.B 
 
   // Signals
   val word_Done = (!io.en_quad_in && counter(4, 0) === "b11111".U) || (io.en_quad_in && counter(2, 0) === "b111".U)
@@ -66,14 +69,14 @@ class rx extends Module {
 
         when(done) {
           counter := 0.U
-          io.data.valid := true.B
+          validNextCycle := true.B
           when(io.data.ready) { // Check if output is ready to accept data
             state := idle
           } .otherwise {
             state := wait_rx_done
           }
         }.elsewhen(word_Done) {
-          io.data.valid := true.B
+          validNextCycle := true.B
           when(!io.data.ready) {
             state := wait_word_done
           }
@@ -81,13 +84,13 @@ class rx extends Module {
       }
     }
     is(wait_rx_done) {
-      io.data.valid := true.B
+      validNextCycle := true.B
       when(io.data.ready) {
         state := idle
       }
     }
     is(wait_word_done) {
-      io.data.valid := true.B
+      validNextCycle := true.B
       when(io.data.ready) {
         state := receive
       }
