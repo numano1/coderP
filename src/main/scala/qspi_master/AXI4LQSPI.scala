@@ -106,7 +106,7 @@ class AXI4LQSPI(
     dummy_len -> MemoryRange(begin = 24, end = 27, mode = MemoryMode.RW),
     data_len -> MemoryRange(begin = 28, end = 31, mode = MemoryMode.RW),
     data_tx -> MemoryRange(begin = 32, end = 35, mode = MemoryMode.RW, write_stall_sig = (tx_fifoAlmostFull)),
-    data_rx -> MemoryRange(begin = 36, end = 39, mode = MemoryMode.R),
+    data_rx -> MemoryRange(begin = 36, end = 39, mode = MemoryMode.R, decoupled = true, decoupled_inst = Some(rx_fifo.io.deq)),
     single_write -> MemoryRange(begin = 40, end = 43, mode = MemoryMode.RW), 
     single_read -> MemoryRange(begin = 44, end = 47, mode = MemoryMode.RW),
     quad_write -> MemoryRange(begin = 48, end = 51, mode = MemoryMode.RW),
@@ -145,12 +145,13 @@ withClockAndReset(clk_rst.ACLK, !clk_rst.ARESETn) {
 
    
     data_rx := rx_fifo.io.deq.bits
-    rx_fifo.io.deq.ready := memory_map(data_rx).readStrobe
+    //rx_fifo.io.deq.ready := memory_map(data_rx).readStrobe
     rx_fifo.io.enq.bits := QSPIMASTER.io.data_rx.bits
     rx_fifo.io.enq.valid := QSPIMASTER.io.data_rx.valid
     QSPIMASTER.io.data_rx.ready := rx_fifo.io.enq.ready
     io.flash_reset := flash_reset
     io.write := single_write || quad_write
+    
   }
 
 

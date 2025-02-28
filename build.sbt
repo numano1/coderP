@@ -11,7 +11,7 @@ ThisBuild / evictionErrorLevel := Level.Info
 val chiselVersion = "3.5.6"
 resolvers += "A-Core Gitlab" at "https://gitlab.com/api/v4/groups/13348068/-/packages/maven"
 val ambaVersion = settingKey[String]("The version of amba used for building.")
-ambaVersion := "0.7+"
+ambaVersion := "0.8+"
 
 // Top Module: qspi_master
 lazy val qspi_master = (project in file("."))
