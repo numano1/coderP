@@ -1,7 +1,7 @@
 #Directories
 VERILOGDIR ?= verilog
-VERILOGPATH = /home/pro/masters/ntabatab/a_core_qspi/Entities/acorechip/chisel/qspi_master/verilog
-SCALAPATH = /home/pro/masters/ntabatab/a_core_qspi/Entities/acorechip/chisel/qspi_master/src/main/scala
+VERILOGPATH = /home/pro/prinsys/onuman/tsmc_prinsys_work/tsmcN65-chip/coderP/source/coderP/verilog
+SCALAPATH = /home/pro/prinsys/onuman/tsmc_prinsys_work/tsmcN65-chip/coderP/source/coderP/src/main/scala
 #DEPDIR :=.depdir
 #$(shell mkdir -p $(DEPDIR) >/dev/null)
 $(shell mkdir -p $(VERILOGPATH) >/dev/null)
