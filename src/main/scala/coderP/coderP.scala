@@ -131,8 +131,11 @@ class CoderPTop extends Module {
   io.pa_ena_out6 := u.pa_ena_out6
 }
 
-/** Verilog emission entry point */
-object CoderPTopGen extends App {
-  chisel3.Driver.execute(args, () => new CoderPTop)
-}
+import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 
+object CoderPTopGen extends App {
+  (new ChiselStage).execute(
+    args,
+    Seq(ChiselGeneratorAnnotation(() => new CoderPTop))
+  )
+}
