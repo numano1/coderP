@@ -133,9 +133,9 @@ class CoderPTop extends Module {
 
 import chisel3.stage.{ChiselStage, ChiselGeneratorAnnotation}
 
-object CoderPTopGen extends App {
+object coderP extends App {
   (new ChiselStage).execute(
     args,
-    Seq(ChiselGeneratorAnnotation(() => new CoderPTop))
+    Seq(ChiselGeneratorAnnotation(() => new coderP))
   )
 }

@@ -73,7 +73,8 @@ done`
 .PHONY: all help doc clean \$(MODULES)
 
 
-all: \$(TARGETS) \$(TEST_TARGETS)
+all: \$(TARGETS) 
+#\$(TEST_TARGETS)
 
 
 #Recipes for individual modules
