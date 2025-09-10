@@ -1,28 +1,28 @@
 import scala.sys.process._
+// OBS: sbt._ has also process. Importing scala.sys.process
+// and explicitly using it ensures the correct operation
 
-// Global settings
 ThisBuild / scalaVersion := "2.13.8"
-ThisBuild / version := scala.sys.process.Process("git rev-parse --short HEAD").!!.mkString.replaceAll("\\s", "") + "-SNAPSHOT"
-ThisBuild / organization := "Chisel-blocks"
+ThisBuild / version      := scala.sys.process.Process("git rev-parse --short HEAD").!!.mkString.replaceAll("\\s", "")+"-SNAPSHOT"
+ThisBuild / organization := "numano1"
 
-// Suppress eviction warnings
-ThisBuild / evictionErrorLevel := Level.Info
+// Last two numbers must be the same
+val chiselVersion = "3.5.4"
+val chiselTestVersion = "0.5.4"
 
-val chiselVersion = "3.5.6"
-resolvers += "A-Core Gitlab" at "https://gitlab.com/api/v4/groups/13348068/-/packages/maven"
-val ambaVersion = settingKey[String]("The version of amba used for building.")
-ambaVersion := "0.8+"
+val breezeVersion = "2.0"
+val dspVersion = "1.5.6"
 
-// Top Module: qspi_master
-lazy val qspi_master = (project in file("."))
-  .aggregate(clockgen, rx, tx) // Aggregate submodules
+lazy val coderp = (project in file("."))
   .settings(
-    name := "qspi_master",
+    name := "coderP",
     libraryDependencies ++= Seq(
       "edu.berkeley.cs" %% "chisel3" % chiselVersion,
-      "edu.berkeley.cs" %% "chiseltest" % "0.5.5" % "test",
-      "Chisel-blocks"   %% "amba" % ambaVersion.value
-
+      "edu.berkeley.cs" %% "chiseltest" % chiselTestVersion,
+      "edu.berkeley.cs" %% "dsptools" % dspVersion,
+      "org.scalanlp" %% "breeze" % breezeVersion,
+      "org.scalanlp" %% "breeze-natives" % breezeVersion,
+      "org.scalanlp" %% "breeze-viz" % breezeVersion
     ),
     scalacOptions ++= Seq(
       "-language:reflectiveCalls",
@@ -30,17 +30,18 @@ lazy val qspi_master = (project in file("."))
       "-feature",
       "-Xcheckinit",
       "-P:chiselplugin:genBundleElements",
-      "-Ymacro-annotations"
     ),
-    addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % chiselVersion cross CrossVersion.full)
+    addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % chiselVersion cross CrossVersion.full),
   )
 
-// Submodule: Clockgen
-lazy val clockgen = (project in file("clockgen"))
+// Parse the version of a submodle from the git submodule status
+// for those modules not version controlled by Maven or equivalent
+def gitSubmoduleHashSnapshotVersion(submod: String): String = {
+    val shellcommand =  "git submodule status | grep %s | awk '{print substr($1,0,7)}'".format(submod)
+    scala.sys.process.Process(Seq("/bin/sh", "-c", shellcommand )).!!.mkString.replaceAll("\\s", "")+"-SNAPSHOT"
+}
+
+// Put your git-version controlled snapshots here
+//libraryDependencies += "Chisel-blocks" %% "someblock" % gitSubmoduleHashSnapshotVersion("someblock")
 
 
-// Submodule: Receiver
-lazy val rx = (project in file("rx"))
-
-// Submodule: Transceiver
-lazy val tx = (project in file("tx"))
