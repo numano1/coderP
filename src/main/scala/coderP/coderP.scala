@@ -87,7 +87,7 @@ class CoderPBB extends ExtModule {
 }
 
 /** Chisel top that simply wires IO to the external VHDL block */
-class CoderPTop extends Module {
+class coderP extends Module {
   val io = IO(new CoderPIO)
 
   val u = Module(new CoderPBB)
